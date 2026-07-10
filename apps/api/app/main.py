@@ -5,6 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 
+# Explicit lists required when allow_credentials=True (CORS spec; no wildcards).
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
+CORS_ALLOW_HEADERS = [
+    "Accept",
+    "Accept-Language",
+    "Authorization",
+    "Content-Language",
+    "Content-Type",
+    "X-Correlation-Id",
+    "X-Request-Id",
+]
+
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -26,8 +38,8 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=CORS_ALLOW_METHODS,
+        allow_headers=CORS_ALLOW_HEADERS,
     )
     return application
 
